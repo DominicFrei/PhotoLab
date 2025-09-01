@@ -4,6 +4,7 @@
 		size?: 'sm' | 'md' | 'lg';
 		disabled?: boolean;
 		class?: string;
+		type?: 'button' | 'submit' | 'reset';
 		onclick?: () => void;
 		children: import('svelte').Snippet;
 	}
@@ -13,6 +14,7 @@
 		size = 'md',
 		disabled = false,
 		class: className = '',
+		type = 'button',
 		onclick,
 		children
 	}: Props = $props();
@@ -33,8 +35,16 @@
 	};
 
 	const classes = `${baseClasses} ${variants[variant]} ${sizes[size]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`;
+
+	function handleClick(event: MouseEvent | TouchEvent) {
+		// Prevent event propagation issues on mobile
+		event.stopPropagation();
+		if (!disabled && onclick) {
+			onclick();
+		}
+	}
 </script>
 
-<button {disabled} class={classes} {onclick}>
+<button {disabled} {type} class={classes} onclick={handleClick} ontouchend={handleClick}>
 	{@render children()}
 </button>

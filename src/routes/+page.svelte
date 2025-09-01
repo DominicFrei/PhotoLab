@@ -58,6 +58,10 @@
 
 	// Control handlers
 	function handleReset() {
+		// Ensure drawing mode is disabled to prevent event conflicts
+		if (store.drawingMode) {
+			store.setDrawingMode(false);
+		}
 		store.reset();
 		drawImageWrapper();
 	}
@@ -155,11 +159,11 @@
 			</div>
 		{:else}
 			<!-- Editor Interface -->
-			<div class="mb-6 flex items-center justify-between">
-				<h2 class="text-2xl font-bold text-gray-900">Edit Your Photo</h2>
+			<div class="mb-6 flex flex-col items-center justify-between">
+				<h2 class="mb-2 text-2xl font-bold text-gray-900">Edit Your Photo</h2>
 				<div class="flex gap-2">
-					<Button variant="secondary" size="sm" onclick={handleReset}>Reset</Button>
-					<Button variant="primary" size="sm" onclick={handleDownload}>
+					<Button variant="secondary" size="sm" onclick={handleReset} type="button">Reset</Button>
+					<Button variant="primary" size="sm" onclick={handleDownload} type="button">
 						<svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap="round"
@@ -170,7 +174,9 @@
 						</svg>
 						Download
 					</Button>
-					<Button variant="outline" size="sm" onclick={handleNewImage}>Upload New Photo</Button>
+					<Button variant="outline" size="sm" onclick={handleNewImage} type="button"
+						>Upload New Photo</Button
+					>
 				</div>
 			</div>
 

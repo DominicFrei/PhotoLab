@@ -43,7 +43,11 @@
 	function handlePointerUp(event: PointerEvent) {
 		if (isPointerDown) {
 			isPointerDown = false;
-			canvas.releasePointerCapture(event.pointerId);
+			try {
+				canvas.releasePointerCapture(event.pointerId);
+			} catch {
+				// Ignore if pointer capture was already released
+			}
 			stopDrawing(store);
 		}
 	}
@@ -51,10 +55,30 @@
 	function handlePointerCancel(event: PointerEvent) {
 		if (isPointerDown) {
 			isPointerDown = false;
-			canvas.releasePointerCapture(event.pointerId);
+			try {
+				canvas.releasePointerCapture(event.pointerId);
+			} catch {
+				// Ignore if pointer capture was already released
+			}
 			stopDrawing(store);
 		}
 	}
+
+	// Clean up any stale pointer captures when drawing mode changes
+	$effect(() => {
+		if (!store.drawingMode && isPointerDown) {
+			isPointerDown = false;
+			// Release all pointer captures
+			if (canvas) {
+				try {
+					canvas.releasePointerCapture(1); // Common pointer ID
+				} catch {
+					// Ignore
+				}
+			}
+			stopDrawing(store);
+		}
+	});
 </script>
 
 <div class="rounded-lg bg-white p-6 shadow-lg">
