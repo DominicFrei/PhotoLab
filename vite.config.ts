@@ -5,6 +5,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
+	server: {
+        allowedHosts: ["composed-hedgehog-allowed.ngrok-free.app"],
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

@@ -15,7 +15,6 @@
 	import { setupCanvas, drawImage, downloadImage } from '$lib/utils/canvasUtils.js';
 	import { applyFilters, loadImage } from '$lib/utils/imageProcessing.js';
 
-
 	// Create the photo editor store
 	const store = createPhotoEditorStore();
 
@@ -115,6 +114,13 @@
 		name="keywords"
 		content="photo editor, online photo editor, image editor, free photo editing, filters, brightness, contrast, image adjustments, photo filters, drawing tools, browser photo editor"
 	/>
+	{#if store.drawingMode}
+		<!-- Prevent zooming when drawing on mobile -->
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+		/>
+	{/if}
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -171,10 +177,7 @@
 			<div class="space-y-6">
 				<!-- Canvas Area (Full Width) -->
 				<div>
-					<PhotoCanvas
-						store={store}
-						onCanvasMount={(canvas) => store.setCanvas(canvas)}
-					/>
+					<PhotoCanvas {store} onCanvasMount={(canvas) => store.setCanvas(canvas)} />
 				</div>
 
 				<!-- Tools Panel (Bottom) -->

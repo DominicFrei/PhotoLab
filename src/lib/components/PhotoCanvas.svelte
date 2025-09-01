@@ -19,13 +19,23 @@
 	});
 
 	function handlePointerDown(event: PointerEvent) {
+		// Only handle drawing when in drawing mode
+		if (!store.drawingMode) return;
+
+		// Prevent default touch behaviors (scrolling, zooming, etc.)
+		event.preventDefault();
+		event.stopPropagation();
+
 		isPointerDown = true;
 		canvas.setPointerCapture(event.pointerId);
 		startDrawing(event, store);
 	}
 
 	function handlePointerMove(event: PointerEvent) {
-		if (isPointerDown) {
+		if (isPointerDown && store.drawingMode) {
+			// Prevent default behaviors during drawing
+			event.preventDefault();
+			event.stopPropagation();
 			draw(event, store);
 		}
 	}
@@ -54,6 +64,7 @@
 			class="max-h-[50vh] max-w-full rounded border border-gray-300 shadow-sm sm:max-h-[60vh] lg:max-h-[70vh] cursor-{store.drawingMode
 				? 'crosshair'
 				: 'default'}"
+			style="touch-action: {store.drawingMode ? 'none' : 'auto'};"
 			onpointerdown={handlePointerDown}
 			onpointermove={handlePointerMove}
 			onpointerup={handlePointerUp}
