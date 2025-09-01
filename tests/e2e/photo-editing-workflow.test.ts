@@ -46,12 +46,16 @@ test.describe('Photo Editor Complete Workflow', () => {
 		// Test Adjust tab (it's the default active tab) - use more specific selector
 		await expect(page.locator('nav button:has-text("Adjust")')).toHaveClass(/text-blue-600/);
 
-		// Test brightness slider (find by nth)
-		const brightnessSlider = page.locator('input[type="range"]').nth(0);
+		// First expand the Basic Adjustments group to access sliders
+		await page.locator('button:has-text("Basic Adjustments")').click();
+		await expect(page.locator('#brightness-slider')).toBeVisible();
+
+		// Test brightness slider (use specific ID selector)
+		const brightnessSlider = page.locator('#brightness-slider');
 		await brightnessSlider.fill('30');
 
 		// Test contrast slider
-		const contrastSlider = page.locator('input[type="range"]').nth(1);
+		const contrastSlider = page.locator('#contrast-slider');
 		await contrastSlider.fill('-10');
 
 		// Test Filters tab
@@ -257,8 +261,10 @@ test.describe('Photo Editor Complete Workflow', () => {
 		await expect(page.locator('h2:has-text("Edit Your Photo")')).toBeVisible({ timeout: 10000 });
 		await expect(page.locator('canvas')).toBeVisible({ timeout: 10000 });
 
-		// Make some adjustments
-		const brightnessSlider = page.locator('input[type="range"]').nth(0);
+		// Make some adjustments - first expand the Basic Adjustments group
+		await page.locator('button:has-text("Basic Adjustments")').click();
+		await expect(page.locator('#brightness-slider')).toBeVisible();
+		const brightnessSlider = page.locator('#brightness-slider');
 		await brightnessSlider.fill('50');
 
 		// Apply a filter
